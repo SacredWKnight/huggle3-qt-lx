@@ -1,35 +1,7 @@
-# See http://docs.travis-ci.com/user/customizing-the-build/
-# See ./travis/* for the actual scripts that get run
-
-language: cpp
-sudo: required
-
-env:
-  - THENEEDFORTHIS=FAIL
-
-branches:
-  except:
-    - debian
-    - nightly/debian
-    - nightly/ubuntu
-    - ubuntu
-
-matrix:
-  include:
-    - env: QTTYPE=4
-#    - env: QTTYPE=5
-  exclude:
-    - env: THENEEDFORTHIS=FAIL
-
-before_install: bash -x ./travis/before_install.sh
-install: bash -x ./travis/install.sh
-
-before_script: bash -x ./travis/before_script.sh
-script: bash -x ./travis/script.sh
-
-notifications: 
-  irc: 
-    channels: 
-      - "chat.freenode.net#huggle"
-    on_failure: always
-    on_success: change
+language: generic
+services: docker
+script:
+ - touch .gitignore
+ - >
+   docker run --volume=$(pwd):/app --workdir=/app coala/base:pre /bin/bash -c
+   "coala-quickstart --ci; coala --ci"
